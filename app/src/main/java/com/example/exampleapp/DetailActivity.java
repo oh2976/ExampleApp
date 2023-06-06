@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,7 +36,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-    private DatabaseReference userdatabaseReference;
     private FirebaseAuth auth;
 
 
@@ -87,14 +87,15 @@ public class DetailActivity extends AppCompatActivity {
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                addedToCart();
                 final HashMap<String, Object> cartMap = new HashMap<>();
-
+                FirebaseUser firebaseUser = auth.getCurrentUser();
                 cartMap.put("productName", product.getName());
                 cartMap.put("productPrice", price.getText().toString());
                 cartMap.put("totalQuantity", quantity.getText().toString());
                 cartMap.put("totalPrice", totalPrice);
 
-                databaseReference.child(cartID).setValue(cartMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference.child(firebaseUser.getUid()).child("CurrentUser").child(cartID).setValue(cartMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(DetailActivity.this, "Add To A Cart", Toast.LENGTH_SHORT).show();
@@ -122,5 +123,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+//    private void addedToCart() {
+//    }
 
 }
