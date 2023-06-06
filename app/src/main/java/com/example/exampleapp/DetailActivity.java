@@ -3,6 +3,7 @@ package com.example.exampleapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -95,10 +96,13 @@ public class DetailActivity extends AppCompatActivity {
                 cartMap.put("totalQuantity", quantity.getText().toString());
                 cartMap.put("totalPrice", totalPrice);
 
-                databaseReference.child(firebaseUser.getUid()).child("CurrentUser").child(cartID).setValue(cartMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference.child(firebaseUser.getUid()).child(cartID).setValue(cartMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(DetailActivity.this, "Add To A Cart", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(DetailActivity.this, CartActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
 
