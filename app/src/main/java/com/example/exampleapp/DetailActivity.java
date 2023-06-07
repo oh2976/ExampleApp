@@ -1,5 +1,6 @@
 package com.example.exampleapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Cart");
+        databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
         String cartID = databaseReference.push().getKey();
 
         auth = FirebaseAuth.getInstance();
@@ -77,7 +80,7 @@ public class DetailActivity extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(product.getImg()).into(detailedImg);
 //            rating.setText(product.Rating)
             description.setText(product.getDescription());
-            price.setText("Price: " + product.getPrice());
+            price.setText(String.valueOf(product.getPrice()));
 
             totalPrice= product.getPrice() * totalQuantity;
 
@@ -94,17 +97,31 @@ public class DetailActivity extends AppCompatActivity {
                 cartMap.put("productName", product.getName());
                 cartMap.put("productPrice", price.getText().toString());
                 cartMap.put("totalQuantity", quantity.getText().toString());
-                cartMap.put("totalPrice", totalPrice);
+                cartMap.put("totalPrice", totalPrice * totalQuantity);
 
-                databaseReference.child(firebaseUser.getUid()).child(cartID).setValue(cartMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartID).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(Void unused) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(DetailActivity.this, "Add To A Cart", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(DetailActivity.this, CartActivity.class);
                         startActivity(intent);
                         finish();
                     }
                 });
+
+
+
+
+
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        Toast.makeText(DetailActivity.this, "Add To A Cart", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(DetailActivity.this, CartActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                });
 
             }
         });

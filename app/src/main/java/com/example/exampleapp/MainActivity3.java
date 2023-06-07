@@ -30,7 +30,7 @@ public class MainActivity3 extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
 
-    Button btnCart;
+    private Button btnCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class MainActivity3 extends AppCompatActivity {
         recyclerView.setHasFixedSize(true); //리사이클러뷰 기존 성능 강화
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
         arrayList = new ArrayList<>(); // Product 객체를 담을 어레이리스트(어댑터 쪽으로 날릴 거임)
 
         database = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
@@ -68,5 +69,7 @@ public class MainActivity3 extends AppCompatActivity {
 
         adapter = new ProductAdapter(arrayList, this);
         recyclerView.setAdapter(adapter); //리사이클러뷰에 어댑터 연결
+
+
     }
 }

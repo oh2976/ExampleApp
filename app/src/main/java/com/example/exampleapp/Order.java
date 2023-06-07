@@ -1,24 +1,13 @@
 package com.example.exampleapp;
 
-import java.io.Serializable;
-
-public class Cart implements Serializable {
+public class Order {
     private String productName;
     private String productPrice;
     private String totalQuantity;
     private int totalPrice;
 
-    private String dataId;
+    public Order() {
 
-    public Cart() {
-    }
-
-    public String getDataId() {
-        return dataId;
-    }
-
-    public void setDataId(String dataId) {
-        this.dataId = dataId;
     }
 
     public String getProductName() {

@@ -6,8 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +40,12 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
     private List<Cart> cartList;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -52,22 +59,31 @@ public class CartActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        cartAdapter = new CartAdapter(this, cartList);
-
-        recyclerView.setAdapter(cartAdapter);
+        Button butBtn = (Button) findViewById(R.id.buy_now);
 
 
-        cartList = new ArrayList<>();
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
 
+        cartList = new ArrayList<>();
 
-        firebaseDatabase.getReference("Cart").child(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        cartList = new ArrayList<>();
+//        cartAdapter = new CartAdapter(this, cartList);
+//        recyclerView.setAdapter(cartAdapter);
+
+        firebaseDatabase.getReference("CurrentUser").child(firebaseAuth.getCurrentUser().getUid()).child("AddToCart").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()){
-                    for(DataSnapshot dataSnapshot: task.getResult().getChildren()){
+                if (task.isSuccessful()) {
+                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                        String dataId = dataSnapshot.getKey();
+
+
+
                         Cart cart = dataSnapshot.getValue(Cart.class);
+                        cart.setDataId(dataId);
+
+
                         cartList.add(cart);
                         cartAdapter.notifyDataSetChanged();
                     }
@@ -75,31 +91,22 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-//        databaseReference = firebaseDatabase.getReference("Cart"); //DB 연결 성공
+        cartAdapter = new CartAdapter(this, cartList);
+        recyclerView.setAdapter(cartAdapter); //리사이클러뷰에 어댑터 연결
 
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
-//                cartList.clear(); //기존 배열 리스트가 존재하지 않게 남아 있는 데이터 초기화
-//                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                    // 반복문으로 데이터 List를 추출해냄
-//                    Cart cart = snapshot.getValue(Cart.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
-//                    cartList.add(cart); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
-//
-//                }
-//                cartAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // 디비를 가져오던 중 에러 발생 시
-//                Log.e("CartAcivity", String.valueOf(databaseError.toException())); // 에러문 출력
-//            }
-//        });
+        butBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CartActivity.this, "버튼 누름", Toast.LENGTH_SHORT).show();
 
+                    Intent intent = new Intent(CartActivity.this, OrderActivity.class);
+                    intent.putExtra("itemList", (Serializable) cartList);
+                    startActivity(intent);
+                }
 
-
+        });
 
     }
+
+
 }
