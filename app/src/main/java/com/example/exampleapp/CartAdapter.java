@@ -52,6 +52,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.CartViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
+        String cartID = databaseReference.push().getKey();
+
         holder.name.setText(cartList.get(position).getProductName());
         holder.price.setText(cartList.get(position).getProductPrice());
         holder.quantity.setText(cartList.get(position).getTotalQuantity());
@@ -62,10 +66,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
-                String cartID = databaseReference.push().getKey();
-                databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartID).child(cartList.get(position).getDataId())
+
+                databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartList.get(position).getDataId())
                         .removeValue()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

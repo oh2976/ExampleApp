@@ -83,7 +83,6 @@ public class CartActivity extends AppCompatActivity {
                         String dataId = dataSnapshot.getKey();
 
                         Cart cart = dataSnapshot.getValue(Cart.class);
-
                         cart.setDataId(dataId);
 
                         cartList.add(cart);
