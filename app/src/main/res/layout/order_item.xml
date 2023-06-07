@@ -24,14 +24,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textName"
+                android:id="@+id/textName_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="상품명"
                 android:layout_margin="5dp"/>
 
             <TextView
-                android:id="@+id/textPrice"
+                android:id="@+id/textPrice_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="가격"
