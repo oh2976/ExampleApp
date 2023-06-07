@@ -65,13 +65,13 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txt_totalPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
             android:background="@color/mainColor"
             android:padding="10dp"
-            android:text="Total Price : 9900"
+            android:text="Total Price : 0"
             android:textAlignment="center"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -86,12 +86,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
-            app:layout_constraintHorizontal_bias="0.461"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toTopOf="@+id/buy_now"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_totalPrice"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buy_now"

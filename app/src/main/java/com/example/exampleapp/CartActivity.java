@@ -3,10 +3,14 @@ package com.example.exampleapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +44,8 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
     private List<Cart> cartList;
 
+    private TextView overTotalAmount;
+
 
 
     @Override
@@ -57,19 +63,17 @@ public class CartActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+
         firebaseAuth = FirebaseAuth.getInstance();
+
 
         Button butBtn = (Button) findViewById(R.id.buy_now);
 
-
-
         firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
+
 
         cartList = new ArrayList<>();
 
-//        cartList = new ArrayList<>();
-//        cartAdapter = new CartAdapter(this, cartList);
-//        recyclerView.setAdapter(cartAdapter);
 
         firebaseDatabase.getReference("CurrentUser").child(firebaseAuth.getCurrentUser().getUid()).child("AddToCart").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -78,15 +82,14 @@ public class CartActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
                         String dataId = dataSnapshot.getKey();
 
-
-
                         Cart cart = dataSnapshot.getValue(Cart.class);
-                        cart.setDataId(dataId);
 
+                        cart.setDataId(dataId);
 
                         cartList.add(cart);
                         cartAdapter.notifyDataSetChanged();
                     }
+
                 }
             }
         });

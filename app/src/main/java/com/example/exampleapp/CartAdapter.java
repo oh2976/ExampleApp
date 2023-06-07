@@ -2,6 +2,7 @@ package com.example.exampleapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +32,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+
+    int totalPrice = 0;
 
 
 
@@ -52,6 +56,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.price.setText(cartList.get(position).getProductPrice());
         holder.quantity.setText(cartList.get(position).getTotalQuantity());
         holder.totalPrice.setText(String.valueOf(cartList.get(position).getTotalPrice()));
+
+
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

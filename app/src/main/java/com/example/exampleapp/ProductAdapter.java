@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.Product
                 .into(holder.imageView);
         holder.textName.setText(arrayList.get(position).getName());
         holder.textPrice.setText(String.valueOf(arrayList.get(position).getPrice()));
+        holder.textStock.setText(String.valueOf(arrayList.get(position).getStock()));
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,11 +73,14 @@ public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.Product
         TextView textName;
         TextView textPrice;
 
+        TextView textStock;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textName = itemView.findViewById(R.id.textName);
             this.textPrice = itemView.findViewById(R.id.textPrice);
             this.imageView = itemView.findViewById(R.id.imageView);
+            this.textStock = itemView.findViewById(R.id.textStock);
 
         }
     }

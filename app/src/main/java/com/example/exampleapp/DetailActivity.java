@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     int totalPrice = 0;
 
     ImageView detailedImg;
-    TextView price, rating, description;
+    TextView price, rating, description, stock;
     Button addToCart;
     ImageView addItem, removeItem;
 
@@ -75,12 +75,14 @@ public class DetailActivity extends AppCompatActivity {
         price = findViewById(R.id.detail_price);
         rating = findViewById(R.id.detailed_star);
         description = findViewById(R.id.detailed_disc);
+        stock = findViewById(R.id.detail_stock);
 
         if (product != null) {
             Glide.with(getApplicationContext()).load(product.getImg()).into(detailedImg);
 //            rating.setText(product.Rating)
             description.setText(product.getDescription());
             price.setText(String.valueOf(product.getPrice()));
+            stock.setText(String.valueOf(product.getStock()));
 
             totalPrice= product.getPrice() * totalQuantity;
 
