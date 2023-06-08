@@ -79,9 +79,12 @@ public class OrderActivity extends AppCompatActivity {
                 arrayList.clear(); //기존 배열 리스트가 존재하지 않게 남아 있는 데이터 초기화
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     // 반복문으로 데이터 List를 추출해냄
+                    String dataId = dataSnapshot.getKey();
+
                     Cart cart = snapshot.getValue(Cart.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
                     arrayList.add(cart); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
 
+                    cart.setDataId(dataId);
                     total += cart.getTotalPrice();
                     Log.d("OrderActivity", total+"");
                     overTotalAmount.setText(String.valueOf(total));
@@ -133,37 +136,50 @@ public class OrderActivity extends AppCompatActivity {
                         cartMap.put("overTotalPrice", total);
                         Log.d("OrderActivity1", total+"");
 
-                        databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(orderId).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        int totalStock = model.getProductStock() - Integer.valueOf(model.getTotalQuantity());
+
+
+
+                        databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(model.getDataId()).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(OrderActivity.this, "주문완료", Toast.LENGTH_SHORT).show();
                                 int b = list.size();
                                 while (b > 0){
+//                                   Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())+"");
 
-                        Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())+"");
+                                    int pId = model.getpId();
+//
+//                                    int totalStock = 0;
+//                                    databaseReferenceProduct.child(model.getDataId()).child("stock");
+
+                                    databaseReferenceProduct.child(String.valueOf(pId)).child("stock").setValue(totalStock).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(OrderActivity.this, "재고 변동 완료", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+//                                    Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(model.getDataId()).child(productId)+"");
 
                                     databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())
                                             .removeValue()
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(OrderActivity.this, "해당 장바구니 데이터 삭제 ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(OrderActivity.this, "해당 장바구니 데이터 삭제, " + totalStock , Toast.LENGTH_SHORT).show();
+
+
                                                 }
                                             });
-                                            b--;
+                                    b--;
 
                                 }
 
 
-
                             }
                         });
-
-//                        databaseReference = databaseReference.push();
-//
-//                        Log.d("OrderActivity2", databaseReference+"");
-//                        Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(list.size()-2).getDataId())+"");
-
 
 
 

@@ -13,8 +13,18 @@ public class Cart implements Serializable {
 
     private String dataId;
 
+    private int productStock;
+
 
     public Cart() {
+    }
+
+    public int getProductStock() {
+        return productStock;
+    }
+
+    public void setProductStock(int productStock) {
+        this.productStock = productStock;
     }
 
     public int getpId() {

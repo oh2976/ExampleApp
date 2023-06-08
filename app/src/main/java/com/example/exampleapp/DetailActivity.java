@@ -109,6 +109,7 @@ public class DetailActivity extends AppCompatActivity {
                 cartMap.put("totalPrice", totalPrice * totalQuantity);
                 cartMap.put("pId", product.getpId());
                 cartMap.put("productImg", product.getImg());
+                cartMap.put("productStock", product.getStock());
                 Log.d("DetailActivity", product.getpId()+"");
 
                 databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartID).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {

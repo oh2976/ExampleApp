@@ -2,12 +2,41 @@ package com.example.exampleapp;
 
 public class Order {
     private String productName;
+
+    private String dataId;
+
+    private int productId;
+    private int overTotalPrice;
     private String productPrice;
     private String totalQuantity;
     private int totalPrice;
 
     public Order() {
 
+    }
+
+    public String getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(String dataId) {
+        this.dataId = dataId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getOverTotalPrice() {
+        return overTotalPrice;
+    }
+
+    public void setOverTotalPrice(int overTotalPrice) {
+        this.overTotalPrice = overTotalPrice;
     }
 
     public String getProductName() {
