@@ -55,9 +55,11 @@ public class MainActivity3 extends AppCompatActivity {
                     // 반복문으로 데이터 List를 추출해냄
                     Product product = snapshot.getValue(Product.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
                     arrayList.add(product); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
+                    Log.d("Mainctivity3", snapshot.getKey()+"");
 
                 }
                 adapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침
+
             }
 
             @Override
@@ -69,6 +71,15 @@ public class MainActivity3 extends AppCompatActivity {
 
         adapter = new ProductAdapter(arrayList, this);
         recyclerView.setAdapter(adapter); //리사이클러뷰에 어댑터 연결
+
+        btnCart = (Button) findViewById(R.id.btnGoToCart);
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity3.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }

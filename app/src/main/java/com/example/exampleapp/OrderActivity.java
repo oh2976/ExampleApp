@@ -36,13 +36,18 @@ public class OrderActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceProduct;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Cart> arrayList;
 
-    TextView name, price;
+    Product product = null;
+
+    private TextView overTotalAmount;
+
+    int total = 0;
 
     Button btnPayment;
 
@@ -60,9 +65,12 @@ public class OrderActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser()
+                ;
+        overTotalAmount = (TextView)findViewById(R.id.order_totalPrice);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
+        databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
 
         databaseReference.child(firebaseUser.getUid()).child("AddToCart").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -73,6 +81,10 @@ public class OrderActivity extends AppCompatActivity {
                     // 반복문으로 데이터 List를 추출해냄
                     Cart cart = snapshot.getValue(Cart.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
                     arrayList.add(cart); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
+
+                    total += cart.getTotalPrice();
+                    Log.d("OrderActivity", total+"");
+                    overTotalAmount.setText(String.valueOf(total));
 
                 }
                 adapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침
@@ -96,6 +108,7 @@ public class OrderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
 
 
+
         List<Cart> list = (ArrayList<Cart>) getIntent().getSerializableExtra("itemList");
 
 
@@ -116,13 +129,37 @@ public class OrderActivity extends AppCompatActivity {
                         cartMap.put("productPrice", model.getProductPrice());
                         cartMap.put("totalQuantity", model.getTotalQuantity());
                         cartMap.put("totalPrice", model.getTotalPrice());
+                        cartMap.put("productId", model.getpId());
+                        cartMap.put("overTotalPrice", total);
+                        Log.d("OrderActivity1", total+"");
 
                         databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(orderId).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(OrderActivity.this, "주문완료", Toast.LENGTH_SHORT).show();
+
+
                             }
                         });
+
+//                        databaseReference = databaseReference.push();
+//
+//                        Log.d("OrderActivity2", databaseReference+"");
+//                        Log.d("OrderActivity2", list+"");
+
+//                        databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.toString())
+//                                .removeValue()
+//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if(task.isSuccessful()){
+//                                            list.remove(list);
+//                                        }else {
+//                                        }
+//                                    }
+//                                });
+
+
 
                     }
 
@@ -132,5 +169,7 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
 }

@@ -7,6 +7,26 @@ public class Product implements Serializable {
     private String name;
     private int price;
 
+    private String longimg;
+
+    private int pId;
+
+    public String getLongimg() {
+        return longimg;
+    }
+
+    public void setLongimg(String longimg) {
+        this.longimg = longimg;
+    }
+
+    public int getpId() {
+        return pId;
+    }
+
+    public void setpId(int pId) {
+        this.pId = pId;
+    }
+
     private String description;
 
     private int stock;

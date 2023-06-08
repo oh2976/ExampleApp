@@ -47,6 +47,7 @@ public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.Product
         holder.textStock.setText(String.valueOf(arrayList.get(position).getStock()));
 
 
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,12 +76,15 @@ public class ProductAdapter  extends RecyclerView.Adapter<ProductAdapter.Product
 
         TextView textStock;
 
+        ImageView detailImg;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textName = itemView.findViewById(R.id.textName);
             this.textPrice = itemView.findViewById(R.id.textPrice);
             this.imageView = itemView.findViewById(R.id.imageView);
             this.textStock = itemView.findViewById(R.id.textStock);
+            this.detailImg = imageView.findViewById(R.id.detail_longimg);
 
         }
     }

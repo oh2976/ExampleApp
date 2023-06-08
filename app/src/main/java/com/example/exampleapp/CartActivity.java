@@ -46,6 +46,8 @@ public class CartActivity extends AppCompatActivity {
 
     private TextView overTotalAmount;
 
+    int total = 0;
+
 
 
     @Override
@@ -71,7 +73,7 @@ public class CartActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
 
-
+        overTotalAmount = (TextView)findViewById(R.id.txt_totalPrice);
         cartList = new ArrayList<>();
 
 
@@ -87,6 +89,11 @@ public class CartActivity extends AppCompatActivity {
 
                         cartList.add(cart);
                         cartAdapter.notifyDataSetChanged();
+
+                        total += cart.getTotalPrice();
+                        Log.d("CartActivity", total+"");
+                        overTotalAmount.setText("결제할 금액: " + String.valueOf(total));
+
                     }
 
                 }
@@ -95,6 +102,8 @@ public class CartActivity extends AppCompatActivity {
 
         cartAdapter = new CartAdapter(this, cartList);
         recyclerView.setAdapter(cartAdapter); //리사이클러뷰에 어댑터 연결
+
+
 
         butBtn.setOnClickListener(new View.OnClickListener() {
             @Override

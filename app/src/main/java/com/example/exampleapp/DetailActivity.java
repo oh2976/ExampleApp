@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,7 +34,8 @@ public class DetailActivity extends AppCompatActivity {
     int totalPrice = 0;
 
     ImageView detailedImg;
-    TextView price, rating, description, stock;
+    ImageView detailedLongImg;
+    TextView price, description, stock, name;
     Button addToCart;
     ImageView addItem, removeItem;
 
@@ -71,18 +74,22 @@ public class DetailActivity extends AppCompatActivity {
         detailedImg = findViewById(R.id.detailed_img);
         addItem = findViewById(R.id.add_item);
         removeItem = findViewById(R.id.remove_item);
+        detailedLongImg = findViewById(R.id.detail_longimg);
+
 
         price = findViewById(R.id.detail_price);
-        rating = findViewById(R.id.detailed_star);
         description = findViewById(R.id.detailed_disc);
         stock = findViewById(R.id.detail_stock);
 
+        name = findViewById(R.id.detailed_name);
+
         if (product != null) {
             Glide.with(getApplicationContext()).load(product.getImg()).into(detailedImg);
-//            rating.setText(product.Rating)
             description.setText(product.getDescription());
             price.setText(String.valueOf(product.getPrice()));
-            stock.setText(String.valueOf(product.getStock()));
+            stock.setText("재고: " + String.valueOf(product.getStock()));
+            name.setText(product.getName());
+            Glide.with(getApplicationContext()).load(product.getLongimg()).into(detailedLongImg);
 
             totalPrice= product.getPrice() * totalQuantity;
 
@@ -100,6 +107,9 @@ public class DetailActivity extends AppCompatActivity {
                 cartMap.put("productPrice", price.getText().toString());
                 cartMap.put("totalQuantity", quantity.getText().toString());
                 cartMap.put("totalPrice", totalPrice * totalQuantity);
+                cartMap.put("pId", product.getpId());
+                cartMap.put("productImg", product.getImg());
+                Log.d("DetailActivity", product.getpId()+"");
 
                 databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartID).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -110,7 +120,6 @@ public class DetailActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-
 
 
 

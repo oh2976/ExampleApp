@@ -8,9 +8,29 @@ public class Cart implements Serializable {
     private String totalQuantity;
     private int totalPrice;
 
+    private int pId;
+    private String productImg;
+
     private String dataId;
 
+
     public Cart() {
+    }
+
+    public int getpId() {
+        return pId;
+    }
+
+    public void setpId(int pId) {
+        this.pId = pId;
+    }
+
+    public String getProductImg() {
+        return productImg;
+    }
+
+    public void setProductImg(String productImg) {
+        this.productImg = productImg;
     }
 
     public String getDataId() {

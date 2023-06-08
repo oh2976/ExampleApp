@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +57,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
         String cartID = databaseReference.push().getKey();
 
+        Glide.with(holder.itemView)
+                .load(cartList.get(position).getProductImg())
+                .into(holder.productImg);
         holder.name.setText(cartList.get(position).getProductName());
         holder.price.setText(cartList.get(position).getProductPrice());
         holder.quantity.setText(cartList.get(position).getTotalQuantity());
@@ -96,8 +100,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
 
-        TextView  name, price, quantity, totalPrice;
-        ImageView deleteItem;
+        TextView  name, price, quantity, totalPrice, cartTotalPrice;
+
+        ImageView deleteItem, productImg;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -106,6 +111,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             quantity = itemView.findViewById(R.id.total_quantity);
             totalPrice = itemView.findViewById(R.id.total_price);
             deleteItem = itemView.findViewById(R.id.delete_item);
+            productImg = itemView.findViewById(R.id.cart_pimg);
         }
     }
 }
