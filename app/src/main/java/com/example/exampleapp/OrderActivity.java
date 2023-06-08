@@ -137,6 +137,23 @@ public class OrderActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(OrderActivity.this, "주문완료", Toast.LENGTH_SHORT).show();
+                                int b = list.size();
+                                while (b > 0){
+
+                        Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())+"");
+
+                                    databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())
+                                            .removeValue()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Toast.makeText(OrderActivity.this, "해당 장바구니 데이터 삭제 ", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                            b--;
+
+                                }
+
 
 
                             }
@@ -145,19 +162,11 @@ public class OrderActivity extends AppCompatActivity {
 //                        databaseReference = databaseReference.push();
 //
 //                        Log.d("OrderActivity2", databaseReference+"");
-//                        Log.d("OrderActivity2", list+"");
+//                        Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(list.size()-2).getDataId())+"");
 
-//                        databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.toString())
-//                                .removeValue()
-//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        if(task.isSuccessful()){
-//                                            list.remove(list);
-//                                        }else {
-//                                        }
-//                                    }
-//                                });
+
+
+
 
 
 

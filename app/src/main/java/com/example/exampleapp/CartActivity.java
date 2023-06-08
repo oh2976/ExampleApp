@@ -47,6 +47,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView overTotalAmount;
 
     int total = 0;
+    Button buyBtn;
 
 
 
@@ -69,7 +70,7 @@ public class CartActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-        Button butBtn = (Button) findViewById(R.id.buy_now);
+        buyBtn = (Button) findViewById(R.id.buy_now);
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
 
@@ -105,7 +106,7 @@ public class CartActivity extends AppCompatActivity {
 
 
 
-        butBtn.setOnClickListener(new View.OnClickListener() {
+        buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(CartActivity.this, "버튼 누름", Toast.LENGTH_SHORT).show();
