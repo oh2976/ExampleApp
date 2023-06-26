@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,7 @@ public class OrderActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReference2;
     DatabaseReference databaseReferenceProduct;
 
     private RecyclerView recyclerView;
@@ -46,6 +49,12 @@ public class OrderActivity extends AppCompatActivity {
     Product product = null;
 
     private TextView overTotalAmount;
+
+    private TextView orderName;
+    private TextView orderPhone;
+    private TextView orderAddress;
+
+
 
     int total = 0;
 
@@ -65,12 +74,41 @@ public class OrderActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser()
-                ;
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         overTotalAmount = (TextView)findViewById(R.id.order_totalPrice);
+        orderName = (TextView)findViewById(R.id.order_name);
+        orderPhone = (TextView)findViewById(R.id.order_phone);
+        orderAddress = (TextView)findViewById(R.id.order_address);
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("UserAccount");
 
         databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
         databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
+
+        databaseReference2.child("UserAccount").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
+//                arrayList.clear(); //기존 배열 리스트가 존재하지 않게 남아 있는 데이터 초기화
+                // 반복문으로 데이터 List를 추출해냄
+
+                UserAccount userAccount = dataSnapshot.getValue(UserAccount.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
+                orderName.setText(userAccount.getUsername());
+                orderPhone.setText(userAccount.getPhone());
+                orderAddress.setText(userAccount.getAddress());
+
+//                    arrayList.add(userAccount); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
+
+//                    userAccount.setDataId(dataId);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // 디비를 가져오던 중 에러 발생 시
+                Log.e("OrderActivity", String.valueOf(databaseError.toException())); // 에러문 출력
+            }
+        });
+
 
         databaseReference.child(firebaseUser.getUid()).child("AddToCart").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -138,8 +176,6 @@ public class OrderActivity extends AppCompatActivity {
 
                         int totalStock = model.getProductStock() - Integer.valueOf(model.getTotalQuantity());
 
-
-
                         databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(model.getDataId()).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -149,7 +185,7 @@ public class OrderActivity extends AppCompatActivity {
 //                                   Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())+"");
 
                                     int pId = model.getpId();
-//
+
 //                                    int totalStock = 0;
 //                                    databaseReferenceProduct.child(model.getDataId()).child("stock");
 
@@ -193,7 +229,6 @@ public class OrderActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 
