@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
                             account.setAddress(strAddress);
                             account.setUpoint(0);
                             account.setSpoint(0);
-                            account.setRegdate( getTime());
+                            account.setRegdate(getTime());
                             //setValue : database에 insert(삽입) 행위
                             mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
 

@@ -15,6 +15,12 @@
         android:theme="@style/Theme.ExampleApp"
         tools:targetApi="31">
         <activity
+            android:name=".DonationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DonationMainActivity"
+            android:exported="false" />
+        <activity
             android:name=".OrderActivity"
             android:exported="false" />
         <activity
@@ -40,7 +46,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity3"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".MainActivity2"
             android:exported="false" />

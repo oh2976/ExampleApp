@@ -31,6 +31,7 @@ public class MainActivity3 extends AppCompatActivity {
 
 
     private Button btnCart;
+    private Button btnDonation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,17 @@ public class MainActivity3 extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity3.this, CartActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnDonation = (Button) findViewById(R.id.btnDonation);
+        btnDonation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity3.this, DonationMainActivity.class);
+                startActivity(intent);
+
             }
         });
 
