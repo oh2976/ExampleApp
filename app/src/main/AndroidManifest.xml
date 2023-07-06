@@ -15,6 +15,9 @@
         android:theme="@style/Theme.ExampleApp"
         tools:targetApi="31">
         <activity
+            android:name=".DonationCompleteActivity"
+            android:exported="false" />
+        <activity
             android:name=".DonationDetailActivity"
             android:exported="false" />
         <activity

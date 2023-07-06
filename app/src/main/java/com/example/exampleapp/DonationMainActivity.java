@@ -90,7 +90,7 @@ public class DonationMainActivity extends AppCompatActivity {
                 // 반복문으로 데이터 List를 추출해냄
 
                 UserAccount userAccount = dataSnapshot.getValue(UserAccount.class); //  만들어 뒀던 Product 객체에 데이터를 담는다.
-                    donationPoint.setText(userAccount.getUpoint() + " 씨드");
+                    donationPoint.setText(userAccount.getSpoint() + " 씨드");
 
             }
 

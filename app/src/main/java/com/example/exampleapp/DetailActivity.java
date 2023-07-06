@@ -41,6 +41,8 @@ public class DetailActivity extends AppCompatActivity {
 
     Product product = null;
 
+    int pid = 0;
+
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
@@ -92,6 +94,11 @@ public class DetailActivity extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(product.getLongimg()).into(detailedLongImg);
 
             totalPrice= product.getPrice() * totalQuantity;
+
+
+            pid = product.getpId();
+            Toast.makeText(DetailActivity.this, String.valueOf(pid), Toast.LENGTH_SHORT).show();
+
 
         }
 

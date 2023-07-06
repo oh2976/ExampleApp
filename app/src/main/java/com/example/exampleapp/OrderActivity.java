@@ -149,13 +149,10 @@ public class OrderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
 
 
-
         List<Cart> list = (ArrayList<Cart>) getIntent().getSerializableExtra("itemList");
 
 
-
         btnPayment = (Button) findViewById(R.id.btnPayment);
-
 
         btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
