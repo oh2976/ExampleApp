@@ -29,11 +29,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class OrderActivity extends AppCompatActivity {
+
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth firebaseAuth;
@@ -46,6 +53,9 @@ public class OrderActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Cart> arrayList;
 
+//    private OrderCompleteAdapter completeAdapter;
+//    private List<MyOrder> myOrderList;
+
     Product product = null;
 
     private TextView overTotalAmount;
@@ -53,6 +63,15 @@ public class OrderActivity extends AppCompatActivity {
     private TextView orderName;
     private TextView orderPhone;
     private TextView orderAddress;
+
+    private String strOrderName;
+    private String strOrderPhone;
+    private String strOrderAddress;
+//    private String orderId;
+
+
+
+
 
 
 
@@ -75,6 +94,7 @@ public class OrderActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
         overTotalAmount = (TextView)findViewById(R.id.order_totalPrice);
         orderName = (TextView)findViewById(R.id.order_name);
         orderPhone = (TextView)findViewById(R.id.order_phone);
@@ -83,6 +103,8 @@ public class OrderActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("CurrentUser");
         databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
+
+        String myOrderId = databaseReference.child("MyOrder").push().getKey();
 
         databaseReference2.child("UserAccount").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,6 +117,9 @@ public class OrderActivity extends AppCompatActivity {
                 orderName.setText(userAccount.getUsername());
                 orderPhone.setText(userAccount.getPhone());
                 orderAddress.setText(userAccount.getAddress());
+                strOrderName = userAccount.getUsername();
+                strOrderPhone = userAccount.getPhone();
+                strOrderAddress = userAccount.getAddress();
 
 //                    arrayList.add(userAccount); // 담은 데이터들을 배열 리스트에 넣고 리사이클러뷰로 보낼 준비
 
@@ -141,7 +166,7 @@ public class OrderActivity extends AppCompatActivity {
         adapter = new CartAdapter(this, arrayList);
         recyclerView.setAdapter(adapter); //리사이클러뷰에 어댑터 연결
 
-        String orderId = databaseReference.push().getKey();
+        final String[] orderId = {databaseReference.push().getKey()};
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -151,6 +176,10 @@ public class OrderActivity extends AppCompatActivity {
 
         List<Cart> list = (ArrayList<Cart>) getIntent().getSerializableExtra("itemList");
 
+        Log.d("OrderActivity1", "list : " + list);
+
+
+//        myOrderList = new ArrayList<>();
 
         btnPayment = (Button) findViewById(R.id.btnPayment);
 
@@ -169,14 +198,25 @@ public class OrderActivity extends AppCompatActivity {
                         cartMap.put("totalPrice", model.getTotalPrice());
                         cartMap.put("productId", model.getpId());
                         cartMap.put("overTotalPrice", total);
+                        cartMap.put("userName", strOrderName);
+                        cartMap.put("phone", strOrderPhone);
+                        cartMap.put("address", strOrderAddress);
+                        cartMap.put("orderId", myOrderId);
+                        cartMap.put("orderDate", getTime());
+                        cartMap.put("orderImg", model.getProductImg());
+//                        cartMap.put("dataId", dataId+"");
                         Log.d("OrderActivity1", total+"");
 
                         int totalStock = model.getProductStock() - Integer.valueOf(model.getTotalQuantity());
 
-                        databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(model.getDataId()).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        orderId[0] = model.getDataId();
+//                        Toast.makeText(OrderActivity.this, orderId[0], Toast.LENGTH_SHORT).show();
+
+                        databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(myOrderId).child(model.getDataId()).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(OrderActivity.this, "주문완료", Toast.LENGTH_SHORT).show();
+
                                 int b = list.size();
                                 while (b > 0){
 //                                   Log.d("OrderActivity2", databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(list.get(b-1).getDataId())+"");
@@ -189,7 +229,7 @@ public class OrderActivity extends AppCompatActivity {
                                     databaseReferenceProduct.child(String.valueOf(pId)).child("stock").setValue(totalStock).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(OrderActivity.this, "재고 변동 완료", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(OrderActivity.this, "재고 변동 완료", Toast.LENGTH_SHORT).show();
                                         }
                                     });
 
@@ -201,9 +241,7 @@ public class OrderActivity extends AppCompatActivity {
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(OrderActivity.this, "해당 장바구니 데이터 삭제, " + totalStock , Toast.LENGTH_SHORT).show();
-
-
+//                                                    Toast.makeText(OrderActivity.this, "해당 장바구니 데이터 삭제, " + totalStock , Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                     b--;
@@ -214,19 +252,38 @@ public class OrderActivity extends AppCompatActivity {
                             }
                         });
 
-
-
-
-
-
                     }
-
-
                 }
 
+//                databaseReference.child(firebaseUser.getUid()).child("MyOrder").child(myOrderId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            for (DataSnapshot dataSnapshot : task.getResult().getChildren()){
+//                                MyOrder myOrder = dataSnapshot.getValue(MyOrder.class);
+//                                myOrderList.add(myOrder);
+//
+//                            }
+//                        }
+//                    }
+//                });
+
+                Intent intent = new Intent(OrderActivity.this, OrderCompleteActivity.class);
+                intent.putExtra("orderId", orderId[0]);
+                intent.putExtra("myOrderId", myOrderId);
+//                intent.putExtra("orderList", (Serializable) myOrderList);
+                startActivity(intent);
             }
+
+
         });
 
+    }
+
+    private String getTime(){
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
+        return mFormat.format(mDate);
     }
 
 }

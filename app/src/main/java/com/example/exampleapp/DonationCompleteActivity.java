@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -72,6 +73,8 @@ public class DonationCompleteActivity extends AppCompatActivity {
             donationName = bundle.getString("donationName");
             donationPoint = bundle.getInt("donationPoint");
             donationDate = bundle.getString("donationDate");
+
+            Log.d("DonationCompleteActivity", userName + donationName + donationPoint + donationDate);
 
             Toast.makeText(DonationCompleteActivity.this, userName + donationName + donationPoint + donationDate, Toast.LENGTH_SHORT).show();
 

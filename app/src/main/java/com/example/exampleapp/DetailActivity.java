@@ -96,8 +96,8 @@ public class DetailActivity extends AppCompatActivity {
             totalPrice= product.getPrice() * totalQuantity;
 
 
-            pid = product.getpId();
-            Toast.makeText(DetailActivity.this, String.valueOf(pid), Toast.LENGTH_SHORT).show();
+//            pid = product.getpId();
+//            Toast.makeText(DetailActivity.this, String.valueOf(pid), Toast.LENGTH_SHORT).show();
 
 
         }
@@ -117,6 +117,7 @@ public class DetailActivity extends AppCompatActivity {
                 cartMap.put("pId", product.getpId());
                 cartMap.put("productImg", product.getImg());
                 cartMap.put("productStock", product.getStock());
+//                cartMap.put("dataId", "");
                 Log.d("DetailActivity", product.getpId()+"");
 
                 databaseReference.child(firebaseUser.getUid()).child("AddToCart").child(cartID).setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
