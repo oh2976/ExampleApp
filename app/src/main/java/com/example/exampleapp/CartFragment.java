@@ -22,52 +22,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartFragment extends Fragment {
-
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    FirebaseAuth firebaseAuth;
-
-
-    RecyclerView recyclerView;
-    CartAdapter cartAdapter;
-    List<Cart> cartList;
-
-
-    public CartFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        View root =  inflater.inflate(R.layout.fragment_cart, container, false);
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        recyclerView = root.findViewById(R.id.recyclerview_cart);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        cartList = new ArrayList<>();
-        cartAdapter = new CartAdapter(getActivity(), cartList);
-
-        recyclerView.setAdapter(cartAdapter);
-
-        firebaseDatabase.getReference("Cart").child(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()){
-                    for(DataSnapshot dataSnapshot: task.getResult().getChildren()){
-                        Cart cart = dataSnapshot.getValue(Cart.class);
-                        cartList.add(cart);
-                        cartAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
-
-
-        return root;
-    }
+//
+//    FirebaseDatabase firebaseDatabase;
+//    DatabaseReference databaseReference;
+//    FirebaseAuth firebaseAuth;
+//
+//
+//    RecyclerView recyclerView;
+//    CartAdapter cartAdapter;
+//    List<Cart> cartList;
+//
+//
+//    public CartFragment() {
+//        // Required empty public constructor
+//    }
+//
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//
+//        View root =  inflater.inflate(R.layout.fragment_cart, container, false);
+//
+//        firebaseDatabase = FirebaseDatabase.getInstance();
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        recyclerView = root.findViewById(R.id.recyclerview_cart);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        cartList = new ArrayList<>();
+//        cartAdapter = new CartAdapter(getActivity(), cartList);
+//
+//        recyclerView.setAdapter(cartAdapter);
+//
+//        firebaseDatabase.getReference("Cart").child(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (task.isSuccessful()){
+//                    for(DataSnapshot dataSnapshot: task.getResult().getChildren()){
+//                        Cart cart = dataSnapshot.getValue(Cart.class);
+//                        cartList.add(cart);
+//                        cartAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//            }
+//        });
+//
+//
+//        return root;
+//    }
 }

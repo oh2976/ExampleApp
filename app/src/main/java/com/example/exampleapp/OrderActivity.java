@@ -248,6 +248,8 @@ public class OrderActivity extends AppCompatActivity {
 
                                 }
 
+                                // 구매
+
 
                             }
                         });
